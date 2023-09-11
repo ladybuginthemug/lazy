@@ -36,6 +36,17 @@ done
 
 shift $((OPTIND-1))
 
+confirm_action() {
+    while true; do
+        read -p "Do you want to rename \"$1\"? (yes/no): " choice
+        case "$choice" in
+            [Yy]* ) return 0;; # User confirmed
+            [Nn]* ) return 1;; # User declined
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+}
+
 
 if [ -z "$extension" ] && [ -z "$filename" ]; then
     echo "Error: Please specify an extension or a file name"
@@ -50,8 +61,13 @@ if [ -n "$filename" ]; then
         if [ -f "$file" ]; then
             base_name=$(basename "$file")
             new_name="${base_name%.*}.$new_extension"
-            mv "$file" "$new_name"
-            echo "Renamed: $file -> $new_name"
+            
+            if confirm_action "$file -> $new_name"; then
+                mv "$file" "$new_name"
+                echo "Renamed: $file -> $new_name"
+            else 
+                echo "Skipped: $file"
+            fi
         fi
     done
 fi
@@ -62,8 +78,13 @@ if [ -n "$extension" ]; then
         if [ -f "$file" ]; then
             base_name=$(basename "$file")
             new_name="${base_name%.*}.$new_extension"
-            mv "$file" "$new_name"
-            echo "Renamed: $file -> $new_name"
+            
+            if confirm_action "$file -> $new_name"; then
+                mv "$file" "$new_name"
+                echo "Renamed: $file -> $new_name"
+            else 
+                echo "Skipped: $file"
+            fi
         fi
     done
 fi
