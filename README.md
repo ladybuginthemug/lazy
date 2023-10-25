@@ -1,2 +1,10 @@
 # lazy
-lazy - automate boring stuff for you
+lazy will automate boring stuff for you.
+
+# how to use
+
+
+# what it does
+
+
+
